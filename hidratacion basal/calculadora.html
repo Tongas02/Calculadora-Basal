@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculadora de hidratación</title>
+    <style>
+        .resultado-box {
+            background-color: red;
+            color: white;
+            padding: 10px;
+            margin-top: 10px;
+            display: none; /* Oculta el cuadro de resultados inicialmente */
+        }
+    </style>
+    <link rel="stylesheet" href="./calculadora.css" />
+</head>
+<body>
+    <div id="contenedor">
+        <div id="calculadora">
+            <div class="contenido">
+                <h1>Hidratación Basal</h1>
+                <p class="item">Completa todos los datos</p>
+                <input
+                    class="item"
+                    id="peso"
+                    type="number"
+                    placeholder="Peso en kg"
+                />
+                <p class="item" id="error">* Debe completar todos los datos</p>
+                <button class="item" id="calcular">Calcular</button>
+                <p class="item resultado" id="flu"></p>
+                <p class="item resultado" id="man"></p>
+                <div class="resultado-box" id="resultados"></div> <!-- Cuadro de resultados -->
+            </div>
+        </div>
+        <div id="detalle">
+            <div class="contenido">
+                <h1>¿Cómo se calcula?</h1>
+                <ul>
+                    <li>De 0kg a 10kg, se calcula 100cc por cada kilo.</li>
+                    <li>Se suman 50cc por cada kilo de peso por arriba de 10kg, hasta 20kg.</li>
+                    <li>De 20kg para arriba, se suman 20cc por cada kilo adicional.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CALCULAR = document.getElementById("calcular");
+        const ERROR = document.getElementById("error");
+        const FLU = document.getElementById("flu");
+        const MAN = document.getElementById("man");
+        const RESULTADOS = document.getElementById("resultados");
+
+        CALCULAR.addEventListener("click", () => {
+            const pesoInput = document.getElementById("peso");
+            const peso = parseFloat(pesoInput.value);
+
+            if (!isNaN(peso)) {
+                let resultadoFlu;
+                let resultadoMan;
+
+                if (peso <= 10) {
+                    resultadoFlu = peso * 100;
+                } else if (peso <= 20) {
+                    resultadoFlu = 1000 + (peso - 10) * 50;
+                } else {
+                    resultadoFlu = 1000 + 500 + (peso - 20) * 20;
+                }
+
+                resultadoMan = (peso + peso / 2) * 15;
+
+                FLU.textContent = `Flu: ${resultadoFlu}cc/h`;
+                MAN.textContent = `Man: ${resultadoMan}cc/h`;
+                ERROR.style.display = "none";
+
+                // Actualiza el cuadro de resultados
+                RESULTADOS.textContent = `Resultados:\nFlu: ${resultadoFlu}cc/h\nMan: ${resultadoMan}cc/h`;
+                RESULTADOS.style.display = "block"; // Muestra el cuadro de resultados
+            } else {
+                ERROR.style.display = "block";
+                FLU.textContent = "";
+                MAN.textContent = "";
+                RESULTADOS.style.display = "none"; // Oculta el cuadro de resultados en caso de error
+            }
+        });
+    </script>
+</body>
+</html>
